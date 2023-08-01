@@ -5,7 +5,7 @@ function calcularIdade(event) {
 
     let idade = calcular(dadosUsuario.diaNascimento, dadosUsuario.mesNascimento, dadosUsuario.anoNascimento);
 
-    let classificacaoIdade = classificarIdade(idade);
+    let classificacaoIdade = classificarIdade(idade.idadeAnos);
 
     let usuarioAtt = organizarDados(dadosUsuario, idade, classificacaoIdade);
 
@@ -34,15 +34,24 @@ function pegarValores() {
 function calcular(diaNascimento, mesNascimento, anoNascimento) {
     let dataAtual = new Date();
     let diaAtual = dataAtual.getDate();
-    let mesAtual = dataAtual.getMonth();
+    let mesAtual = dataAtual.getMonth() + 1;
     let anoAtual = dataAtual.getFullYear();
 
     let idadeAnos = anoAtual - anoNascimento;
     let idadeMeses = mesAtual - mesNascimento;
     let idadeDias = diaAtual - diaNascimento;
 
+    if (idadeDias < 0) {
+        idadeMeses--;
+        idadeDias += 30;
+    }
+
+    if (idadeMeses < 0) {
+        idadeAnos--;
+        idadeMeses += 12;
+    }
+
     return { idadeAnos, idadeMeses, idadeDias };
-    //depois fazer as validacoes ano mes e dia
 }
 
 function classificarIdade(idadeAnos) {
@@ -114,7 +123,7 @@ function montarTabela(listaDeCadastrados) {
         template += ` <tr>
         <td data-cell="nome">${pessoa.nome}</td>
         <td data-cell="data de nascimento">${pessoa.diaNascimento}/${pessoa.mesNascimento}/${pessoa.anoNascimento}</td>
-        <td data-cell="idade">${pessoa.idadeAnos}Anos${pessoa.idadeMeses}Meses${pessoa.idadeDias}Dias</td>
+        <td data-cell="idade">${pessoa.idadeAnos}Ano(s), ${pessoa.idadeMeses}Mes(es) e ${pessoa.idadeDias}Dia(s).</td>
         <td data-cell="faixa etária">${pessoa.classificacao}</td>
     </tr>`
     });
